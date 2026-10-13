@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>原神角色图鉴馆｜人气投票</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* ================= 投票页专属样式 ================= */
+.page-head{text-align:center;margin-bottom:24px;}
+.page-head h1{
+  display:inline-block;font-size:clamp(24px,3.4vw,32px);letter-spacing:clamp(4px,1vw,10px);
+  color:var(--gold-bright);font-weight:800;padding-bottom:13px;position:relative;
+}
+.page-head h1::after{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:120%;height:1px;background:linear-gradient(90deg,transparent,var(--line-strong),transparent);}
+.page-head p{margin-top:12px;font-size:13px;letter-spacing:3px;color:var(--text-dim);}
+
+.vote-layout{display:grid;grid-template-columns:1fr 320px;gap:22px;align-items:start;}
+
+/* ---------- 投票工具条 ---------- */
+.vbar{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  border:1px solid var(--line);background:linear-gradient(180deg,rgba(24,35,43,.7),rgba(17,26,32,.7));
+  padding:14px 16px;margin-bottom:16px;
+}
+.vbar .search{flex:1;min-width:200px;}
+.vbar .sel{
+  height:44px;padding:0 14px;font-family:inherit;font-size:13px;letter-spacing:1px;cursor:pointer;
+  color:var(--text);background:rgba(255,255,255,.03);border:1px solid var(--line);outline:none;
+}
+.vbar .sel option{background:#131d24;color:var(--text);}
+.myvote{
+  font-size:12.5px;letter-spacing:2px;color:var(--text-dim);padding:0 4px;white-space:nowrap;
+}
+.myvote b{color:var(--gold-bright);}
+
+/* ---------- 投票网格 ---------- */
+.vote-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+
+.vote-item{
+  position:relative;display:flex;align-items:center;gap:12px;
+  padding:12px 14px;cursor:pointer;
+  background:linear-gradient(180deg,var(--panel-2),var(--panel));
+  border:1px solid var(--line);border-left:3px solid var(--ec,var(--gold));
+  transition:transform .26s cubic-bezier(.22,.9,.24,1),border-color .26s,box-shadow .26s,background .26s;
+}
+.vote-item:hover{
+  transform:translateY(-5px);
+  border-color:var(--ec,var(--gold));
+  box-shadow:0 14px 30px rgba(0,0,0,.5),0 0 22px -8px var(--ec,var(--gold));
+}
+.vote-item.selected{
+  border-color:var(--ec,var(--gold));
+  background:linear-gradient(90deg,color-mix(in srgb,var(--ec) 16%,transparent),transparent 62%),
+             linear-gradient(180deg,var(--panel-2),var(--panel));
+  box-shadow:0 0 0 1px var(--ec,var(--gold)),0 14px 30px rgba(0,0,0,.45);
+}
+.vote-item input[type="radio"]{
+  appearance:none;-webkit-appearance:none;flex:none;width:18px;height:18px;border-radius:50%;
+  border:2px solid var(--text-mute);cursor:pointer;transition:border-color .2s,box-shadow .2s;
+}
+.vote-item input[type="radio"]:checked{border-color:var(--ec,var(--gold));box-shadow:inset 0 0 0 4px var(--ec,var(--gold));}
+.vote-item img{
+  width:52px;height:52px;border-radius:50%;object-fit:cover;flex:none;
+  border:2px solid var(--ec,var(--gold));background:#0a0f12;
+}
+.vote-item .imgph{border-radius:50%;width:52px;height:52px;font-size:18px;flex:none;}
+.vi-main{flex:1;min-width:0;}
+.vi-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:7px;}
+.vi-name{font-size:15px;font-weight:700;letter-spacing:1.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.vi-name small{font-weight:400;font-size:11px;color:var(--text-mute);margin-left:6px;letter-spacing:.5px;}
+.count{
+  font-size:17px;font-weight:800;color:var(--ec,var(--gold));flex:none;
+  font-variant-numeric:tabular-nums;display:inline-block;
+}
+.count.pop{animation:numPop .58s cubic-bezier(.2,.9,.3,1.5);}
+@keyframes numPop{0%{transform:scale(1)}40%{transform:scale(1.62)}100%{transform:scale(1)}}
+.bar{height:7px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;}
+.bar-fill{
+  height:100%;width:0;border-radius:99px;
+  background:var(--ec,var(--gold));
+  background:linear-gradient(90deg,color-mix(in srgb,var(--ec) 60%,#000 0%),var(--ec));
+  transition:width .72s cubic-bezier(.2,.8,.25,1);
+}
+
+/* ---------- 排行榜 ---------- */
+.rank-panel{
+  position:sticky;top:calc(var(--nav-h) + 22px);
+  background:linear-gradient(180deg,var(--panel-2),var(--panel));
+  border:1px solid var(--line);padding:18px 16px;
+}
+.rank-panel h3{
+  font-size:15px;letter-spacing:4px;color:var(--gold);
+  padding-bottom:12px;margin-bottom:8px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:8px;
+}
+.rank-panel h3::before{content:"";width:5px;height:14px;background:var(--gold);box-shadow:0 0 10px var(--gold);}
+.rank-list{display:flex;flex-direction:column;}
+.rank-row{
+  display:flex;align-items:center;gap:9px;padding:8px 3px;
+  border-bottom:1px dashed rgba(211,188,142,.13);
+  animation:rankIn .42s cubic-bezier(.22,.9,.24,1) both;
+}
+@keyframes rankIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.rank-row .rk{flex:none;width:24px;text-align:center;font-size:13.5px;font-weight:800;color:var(--text-mute);}
+.rank-row:nth-child(1) .rk{color:#e8c968;}
+.rank-row:nth-child(2) .rk{color:#c0c8d4;}
+.rank-row:nth-child(3) .rk{color:#c89a6b;}
+.rank-row img,.rank-row .imgph{width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid var(--ec,var(--gold));background:#0a0f12;flex:none;font-size:13px;}
+.rank-row .rr-name{flex:1;min-width:0;font-size:13px;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rank-row .rr-name small{display:block;font-size:10.5px;color:var(--text-mute);margin-top:1px;}
+.rank-row .rr-votes{font-size:14.5px;font-weight:800;color:var(--ec,var(--gold));font-variant-numeric:tabular-nums;flex:none;}
+.rank-total{margin-top:14px;padding-top:13px;border-top:1px solid var(--line);text-align:center;font-size:12.5px;letter-spacing:2px;color:var(--text-dim);}
+.rank-total b{color:var(--gold-bright);font-size:17px;margin:0 4px;font-variant-numeric:tabular-nums;}
+
+/* ---------- 底部操作 ---------- */
+.actions{display:flex;justify-content:center;gap:16px;margin-top:28px;flex-wrap:wrap;}
+.actions .btn{padding:14px 46px;font-size:15px;letter-spacing:4px;font-weight:700;}
+
+@media (max-width:1080px){
+  .vote-layout{grid-template-columns:1fr;}
+  .rank-panel{position:static;}
+}
+@media (max-width:640px){
+  .vote-grid{grid-template-columns:1fr;}
+  .actions .btn{width:100%;padding:13px 0;}
+}
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="gem"></span>原神角色图鉴馆</a>
+    <nav class="nav-links">
+      <a href="index.html">首页</a>
+      <a href="detail.html">角色图鉴</a>
+      <a href="vote.html" class="active">人气投票</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page">
+
+  <div class="page-head">
+    <h1>角色人气投票</h1>
+    <p>全 <b id="hTotal">124</b> 位角色同台竞逐 · 每人每次可投一票</p>
+  </div>
+
+  <div class="vote-layout">
+    <div>
+      <div class="vbar">
+        <label class="search">
+          <span class="ico">⌕</span>
+          <input type="text" id="q" placeholder="搜索你想支持的角色…" autocomplete="off">
+        </label>
+        <select class="sel" id="fRegion"></select>
+        <select class="sel" id="fElement"></select>
+        <span class="myvote">我的选择：<b id="myPick">尚未选择</b></span>
+      </div>
+
+      <div class="vote-grid" id="voteGrid"></div>
+
+      <div class="actions">
+        <button class="btn primary" id="submitBtn" type="button">提 交 投 票</button>
+        <button class="btn" id="resetBtn" type="button">重 置 投 票</button>
+      </div>
+    </div>
+
+    <aside class="rank-panel">
+      <h3>实时人气排行榜</h3>
+      <div class="rank-list" id="rankList"></div>
+      <div class="rank-total">当前总票数<b id="totalVotes">0</b>票</div>
+    </aside>
+  </div>
+</main>
+
+<footer>原神角色图鉴馆 · 票数保存在本机浏览器 · 立绘画像素材版权归 <b>© HoYoverse（米哈游）</b> 所有</footer>
+
+<div class="modal-mask" id="modalMask">
+  <div class="modal" id="modalBox">
+    <img class="m-icon" id="mAvatar" src="" alt="" hidden
+         style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--mc,var(--gold));margin-bottom:12px">
+    <div class="m-icon" id="mEmoji">✦</div>
+    <h3 id="mTitle">—</h3>
+    <p id="mText">—</p>
+    <div class="m-btns" id="mBtns"></div>
+  </div>
+</div>
+
+<script src="characters.js"></script>
+<script>
+/* =====================================================
+   人气投票页脚本：选项渲染 / 提交投票 / 数字跳动 / 排行榜 / 重置
+   ===================================================== */
+(function(){
+  var D = window.GENSHIN, L = D.list;
+  var $ = function(id){ return document.getElementById(id); };
+
+  window.imgFail = function(el){
+    el.onerror = null;
+    var d = document.createElement('div');
+    d.className = 'imgph';
+    d.style.setProperty('--ec', D.color[el.getAttribute('data-el')] || '#d3bc8e');
+    d.textContent = el.getAttribute('data-ch') || '';
+    if (el.parentNode) el.parentNode.replaceChild(d, el);
+  };
+
+  /* ---------- 票数存取 ---------- */
+  var voteStore = (function(){
+    var KEY = 'genshin_votes_v3', mem = null, ok = false;
+    try{ localStorage.setItem('__t', '1'); localStorage.removeItem('__t'); ok = true; }catch(e){}
+    return {
+      read: function(){ try{ if (ok){ var r = localStorage.getItem(KEY); return r ? JSON.parse(r) : null; } }catch(e){} return mem; },
+      write: function(o){ mem = o; try{ if (ok) localStorage.setItem(KEY, JSON.stringify(o)); }catch(e){} },
+      clear: function(){ mem = null; try{ if (ok) localStorage.removeItem(KEY); }catch(e){} }
+    };
+  })();
+
+  /* ---------- 初始票数：使用数据中预置的「历史人气」基准值 ---------- */
+  var votes = {};
+  (function init(){
+    var saved = voteStore.read();
+    L.forEach(function(c){
+      votes[c.id] = (saved && typeof saved[c.id] === 'number') ? saved[c.id] : (c.pop || 20);
+    });
+    if (!saved) voteStore.write(votes);
+  })();
+
+  /* ---------- 筛选 ---------- */
+  var state = { q: '', region: '', element: '' };
+  $('fRegion').innerHTML = '<option value="">全部国度</option>' +
+    D.regions.map(function(r){ return '<option value="' + r + '">' + r + '</option>'; }).join('');
+  $('fElement').innerHTML = '<option value="">全部元素</option>' +
+    D.elements.map(function(e){ return '<option value="' + e + '">' + e + '元素</option>'; }).join('');
+  $('fRegion').addEventListener('change', function(){ state.region = this.value; render(); });
+  $('fElement').addEventListener('change', function(){ state.element = this.value; render(); });
+  $('q').addEventListener('input', function(){ state.q = this.value.trim().toLowerCase(); render(); });
+
+  function current(){
+    return L.filter(function(c){
+      if (state.region && c.region !== state.region) return false;
+      if (state.element && c.el !== state.element) return false;
+      if (state.q && (c.name + c.title + c.region + c.el).toLowerCase().indexOf(state.q) === -1) return false;
+      return true;
+    });
+  }
+
+  var gridEl = $('voteGrid');
+  var pickedId = null;
+
+  /* ---------- 渲染投票项 ---------- */
+  function render(){
+    var list = current();
+    gridEl.innerHTML = list.map(function(c){
+      var sel = (pickedId === c.id) ? ' selected' : '';
+      return '<label class="vote-item' + sel + '" data-id="' + c.id + '" style="--ec:' + c.color + '">' +
+        '<input type="radio" name="vote" value="' + c.id + '"' + (pickedId === c.id ? ' checked' : '') + '>' +
+        '<img src="' + c.icon + '" alt="' + c.name + '" loading="lazy" data-el="' + c.el + '" data-ch="' + c.name + '" onerror="imgFail(this)">' +
+        '<div class="vi-main">' +
+          '<div class="vi-top">' +
+            '<span class="vi-name">' + c.name + '<small>' + c.region + ' · ' + c.el + '</small></span>' +
+            '<span class="count" id="count-' + c.id + '">0</span>' +
+          '</div>' +
+          '<div class="bar"><div class="bar-fill" id="bar-' + c.id + '"></div></div>' +
+        '</div>' +
+      '</label>';
+    }).join('');
+    if (!list.length){
+      gridEl.innerHTML = '<div class="empty" style="grid-column:1/-1"><b>✦</b>没有符合条件的角色</div>';
+    }
+    refresh(false);
+  }
+
+  gridEl.addEventListener('change', function(e){
+    if (e.target.name !== 'vote') return;
+    pickedId = e.target.value;
+    Array.prototype.forEach.call(gridEl.children, function(row){
+      if (row.classList) row.classList.toggle('selected', row.dataset.id === pickedId);
+    });
+    var c = L.find(function(x){ return x.id === pickedId; });
+    $('myPick').textContent = c ? c.name : '尚未选择';
+  });
+
+  /* ---------- 刷新票数 / 进度条 / 排行榜 ---------- */
+  function refresh(popIds){
+    var max = 0, total = 0;
+    L.forEach(function(c){ if (votes[c.id] > max) max = votes[c.id]; total += votes[c.id]; });
+
+    var list = current();
+    list.forEach(function(c){
+      var ce = document.getElementById('count-' + c.id);
+      var be = document.getElementById('bar-' + c.id);
+      if (!ce || !be) return;
+      ce.textContent = votes[c.id];
+      be.style.width = (max > 0 ? (votes[c.id] / max) * 100 : 0) + '%';
+      if (popIds && popIds.indexOf(c.id) > -1){
+        ce.classList.remove('pop'); void ce.offsetWidth; ce.classList.add('pop');
+      }
+    });
+
+    var sorted = L.slice().sort(function(a, b){ return votes[b.id] - votes[a.id]; }).slice(0, 10);
+    $('rankList').innerHTML = sorted.map(function(c, i){
+      return '<div class="rank-row" style="--ec:' + c.color + ';animation-delay:' + (i * .04) + 's">' +
+        '<span class="rk">' + (i + 1) + '</span>' +
+        '<img src="' + c.icon + '" alt="' + c.name + '" data-el="' + c.el + '" data-ch="' + c.name + '" onerror="imgFail(this)">' +
+        '<span class="rr-name">' + c.name + '<small>' + c.region + ' · ' + c.el + '</small></span>' +
+        '<span class="rr-votes">' + votes[c.id] + '</span>' +
+      '</div>';
+    }).join('');
+    $('totalVotes').textContent = total;
+  }
+
+  /* ---------- 弹窗 ---------- */
+  var maskEl = $('modalMask');
+  function showModal(opt){
+    var imgEl = $('mAvatar'), emEl = $('mEmoji');
+    if (opt.img){ imgEl.hidden = false; emEl.hidden = true; imgEl.src = opt.img; imgEl.onerror = function(){ imgFail(this); }; }
+    else { imgEl.hidden = true; emEl.hidden = false; emEl.textContent = opt.emoji || '✦'; }
+    $('mTitle').textContent = opt.title || '';
+    $('mText').textContent = opt.text || '';
+    $('modalBox').style.setProperty('--mc', opt.color || 'var(--gold)');
+    var btns = $('mBtns'); btns.innerHTML = '';
+    var ok = document.createElement('button');
+    ok.className = 'btn sm primary'; ok.textContent = opt.okText || '好 的';
+    ok.addEventListener('click', function(){ hide(); if (opt.onOk) opt.onOk(); });
+    btns.appendChild(ok);
+    if (opt.cancelText){
+      var cn = document.createElement('button');
+      cn.className = 'btn sm'; cn.textContent = opt.cancelText;
+      cn.addEventListener('click', hide);
+      btns.appendChild(cn);
+    }
+    maskEl.classList.add('show');
+  }
+  function hide(){ maskEl.classList.remove('show'); }
+  maskEl.addEventListener('click', function(e){ if (e.target === maskEl) hide(); });
+
+  /* ---------- 提交投票 ---------- */
+  $('submitBtn').addEventListener('click', function(){
+    if (!pickedId){
+      showModal({ emoji: '⚠', color: '#d3bc8e', title: '还没有选择角色',
+        text: '请先在上方列表中选中一位角色，再点击【提交投票】。' });
+      return;
+    }
+    var c = L.find(function(x){ return x.id === pickedId; });
+    votes[c.id] += 1;
+    voteStore.write(votes);
+    refresh([c.id]);
+    showModal({
+      img: c.icon, color: c.color, title: '投票成功！',
+      text: '你为「' + c.name + '」投出了宝贵的一票，TA 当前票数为 ' + votes[c.id] + '。右侧排行榜已实时更新，感谢旅人的支持！',
+      okText: '收 下'
+    });
+  });
+
+  /* ---------- 重置 ---------- */
+  $('resetBtn').addEventListener('click', function(){
+    showModal({
+      emoji: '⚠', color: '#d3bc8e', title: '确定要重置投票吗？',
+      text: '重置后所有角色的票数将清空为 0，本机保存的投票记录也会一并删除，此操作无法撤销。',
+      okText: '确认重置', cancelText: '取消',
+      onOk: function(){
+        L.forEach(function(c){ votes[c.id] = 0; });
+        voteStore.clear(); voteStore.write(votes);
+        pickedId = null; $('myPick').textContent = '尚未选择';
+        render();
+        showModal({ emoji: '✦', color: '#d3bc8e', title: '已重置',
+          text: '所有角色的票数已清空，排行榜从零开始，欢迎再次投票。' });
+      }
+    });
+  });
+
+  /* ---------- 初始化 ---------- */
+  $('hTotal').textContent = D.count;
+  var qid = new URLSearchParams(location.search).get('id');
+  if (qid && L.some(function(c){ return c.id === qid; })){
+    pickedId = qid;
+    var c0 = L.find(function(x){ return x.id === qid; });
+    $('myPick').textContent = c0.name;
+  }
+  render();
+  if (pickedId){
+    setTimeout(function(){
+      var el = gridEl.querySelector('[data-id="' + pickedId + '"]');
+      if (el){ el.classList.add('selected'); el.scrollIntoView({ block: 'center' }); }
+    }, 160);
+  }
+})();
+</script>
+</body>
+</html>

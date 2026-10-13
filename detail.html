@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>原神角色图鉴馆｜角色图鉴</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* ================= 图鉴页专属样式 ================= */
+.page-head{text-align:center;margin-bottom:26px;}
+.page-head h1{
+  display:inline-block;font-size:clamp(24px,3.4vw,32px);letter-spacing:clamp(4px,1vw,10px);
+  color:var(--gold-bright);font-weight:800;padding-bottom:13px;position:relative;
+}
+.page-head h1::after{
+  content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+  width:120%;height:1px;background:linear-gradient(90deg,transparent,var(--line-strong),transparent);
+}
+.page-head p{margin-top:12px;font-size:13px;letter-spacing:3px;color:var(--text-dim);}
+
+/* ---------- 筛选面板 ---------- */
+.filter-panel{
+  border:1px solid var(--line);background:linear-gradient(180deg,rgba(24,35,43,.7),rgba(17,26,32,.7));
+  padding:18px 20px;margin-bottom:22px;
+}
+.filter-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px;}
+.filter-top .search{flex:1;}
+.count-tag{font-size:12.5px;letter-spacing:2px;color:var(--text-dim);white-space:nowrap;}
+.count-tag b{color:var(--gold-bright);font-size:17px;margin:0 3px;font-variant-numeric:tabular-nums;}
+.sortsel{
+  height:44px;padding:0 14px;font-family:inherit;font-size:13px;letter-spacing:1px;cursor:pointer;
+  color:var(--text);background:rgba(255,255,255,.03);border:1px solid var(--line);outline:none;
+}
+.sortsel:focus{border-color:var(--line-strong);}
+.sortsel option{background:#131d24;color:var(--text);}
+
+/* ---------- 网格 ---------- */
+.roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:16px;}
+
+/* ---------- 空状态 ---------- */
+.empty{
+  grid-column:1/-1;text-align:center;padding:70px 20px;color:var(--text-mute);
+  border:1px dashed var(--line);letter-spacing:2px;font-size:14px;
+}
+.empty b{display:block;font-size:34px;margin-bottom:14px;color:var(--gold);}
+
+/* ---------- 抽屉动作区 ---------- */
+.d-actions .btn{flex:1;padding:11px 0;font-size:13px;letter-spacing:2px;}
+.d-actions .btn.faved{background:rgba(211,188,142,.2);border-color:var(--gold);color:var(--gold-bright);}
+
+/* 抽屉内导航（上一位 / 下一位） */
+.d-nav{display:flex;gap:1px;background:var(--line);border-top:1px solid var(--line);flex:none;}
+.d-nav button{
+  flex:1;padding:14px 10px;cursor:pointer;font-size:13px;letter-spacing:2px;
+  color:var(--text-dim);background:rgba(14,22,28,.96);border:none;transition:all .22s;
+}
+.d-nav button:hover{color:var(--gold-bright);background:rgba(211,188,142,.14);}
+.d-nav button b{color:var(--gold);font-weight:600;}
+
+@media (max-width:600px){
+  .roster{grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:11px;}
+  .filter-panel{padding:14px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== 顶部导航 ==================== -->
+<header class="navbar">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="gem"></span>原神角色图鉴馆</a>
+    <nav class="nav-links">
+      <a href="index.html">首页</a>
+      <a href="detail.html" class="active">角色图鉴</a>
+      <a href="vote.html">人气投票</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page">
+
+  <div class="page-head">
+    <h1>提瓦特角色图鉴</h1>
+    <p>全 <b id="hTotal">124</b> 位可操作角色档案 · 点击卡片查看完整设定</p>
+  </div>
+
+  <!-- ==================== 筛选面板 ==================== -->
+  <section class="filter-panel">
+    <div class="filter-top">
+      <label class="search">
+        <span class="ico">⌕</span>
+        <input type="text" id="q" placeholder="搜索角色名 / 称号 / 归属 / 命座…" autocomplete="off">
+      </label>
+      <span class="count-tag">当前匹配 <b id="hCount">124</b> 位</span>
+      <select class="sortsel" id="sort">
+        <option value="release">按上线顺序</option>
+        <option value="star">按星级（5★优先）</option>
+        <option value="name">按名字排序</option>
+        <option value="region">按国度归类</option>
+        <option value="element">按元素归类</option>
+      </select>
+    </div>
+
+    <div class="filters" id="filters">
+      <div class="filter-row"><span class="lab">国 度</span><div class="chips" id="fRegion"></div></div>
+      <div class="filter-row"><span class="lab">元 素</span><div class="chips" id="fElement"></div></div>
+      <div class="filter-row"><span class="lab">武 器</span><div class="chips" id="fWeapon"></div></div>
+      <div class="filter-row"><span class="lab">星 级</span><div class="chips" id="fStar"></div></div>
+    </div>
+  </section>
+
+  <!-- ==================== 角色网格 ==================== -->
+  <section class="roster" id="roster"></section>
+</main>
+
+<footer>
+  原神角色图鉴馆 · 收录 <b id="fTotal">124</b> 位角色 · 立绘画像素材版权归 <b>© HoYoverse（米哈游）</b> 所有，仅作学习交流使用
+</footer>
+
+<!-- ==================== 角色详情抽屉 ==================== -->
+<div class="mask" id="mask"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true">
+  <div class="d-hero">
+    <img id="dArt" src="" alt="">
+    <button class="d-close" id="dClose" type="button" title="关闭">✕</button>
+    <div class="d-headline">
+      <div class="d-title" id="dTitle">—</div>
+      <div class="d-name" id="dName">—</div>
+      <div class="d-sub" id="dSub">—</div>
+    </div>
+  </div>
+
+  <div class="d-body" id="dBody">
+    <div class="badges" id="dBadges"></div>
+    <div class="tags" id="dTags"></div>
+    <div class="quote" id="dQuote">—</div>
+
+    <div class="sec-title">角色故事</div>
+    <p class="story" id="dStory">—</p>
+
+    <div class="sec-title">角色亮点</div>
+    <ul class="hl" id="dHighlights"></ul>
+
+    <div class="sec-title">更多设定</div>
+    <div class="extra" id="dExtra">—</div>
+
+    <div class="d-actions">
+      <button class="btn sm" id="favBtn" type="button">☆ 收藏角色</button>
+      <button class="btn sm" id="copyBtn" type="button">⧉ 复制档案</button>
+      <a class="btn sm" id="voteBtn" href="vote.html">去投票</a>
+    </div>
+  </div>
+
+  <div class="d-nav">
+    <button type="button" id="prevBtn">‹ 上一页</button>
+    <button type="button" id="nextBtn">下一位 ›</button>
+  </div>
+</aside>
+
+<!-- ==================== 提示弹窗 ==================== -->
+<div class="modal-mask" id="msgMask">
+  <div class="modal" id="msgModal">
+    <div class="m-icon" id="msgIcon">✦</div>
+    <h3 id="msgTitle">—</h3>
+    <p id="msgText">—</p>
+    <div class="m-btns">
+      <button class="btn sm primary" id="msgBtn" type="button">好 的</button>
+    </div>
+  </div>
+</div>
+
+<script src="characters.js"></script>
+<script>
+/* =====================================================
+   角色图鉴页脚本：筛选 / 搜索 / 排序 / 详情抽屉 / 收藏 / 复制
+   ===================================================== */
+(function(){
+  var D = window.GENSHIN, L = D.list;
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* ---------- 图片兜底 ---------- */
+  window.imgFail = function(el){
+    el.onerror = null;
+    var d = document.createElement('div');
+    d.className = 'imgph';
+    d.style.setProperty('--ec', D.color[el.getAttribute('data-el')] || '#d3bc8e');
+    d.textContent = el.getAttribute('data-ch') || '';
+    if (el.parentNode) el.parentNode.replaceChild(d, el);
+  };
+
+  /* ---------- 收藏（localStorage + 内存兜底） ---------- */
+  var favStore = (function(){
+    var KEY = 'genshin_favs_v2', mem = [], ok = false;
+    try{ localStorage.setItem('__t', '1'); localStorage.removeItem('__t'); ok = true; }catch(e){}
+    return {
+      read: function(){ try{ if (ok){ var r = localStorage.getItem(KEY); return r ? JSON.parse(r) : []; } }catch(e){} return mem; },
+      write: function(a){ mem = a; try{ if (ok) localStorage.setItem(KEY, JSON.stringify(a)); }catch(e){} }
+    };
+  })();
+
+  /* ---------- URL 参数 ---------- */
+  var qs = new URLSearchParams(location.search);
+  var state = {
+    q: '', region: qs.get('region') || '', element: qs.get('el') || '',
+    weapon: '', star: '', sort: 'release'
+  };
+
+  /* ---------- 构建筛选 chips ---------- */
+  function chips(host, list, key, withDot, labels){
+    var all = '<span class="chip' + (state[key] ? '' : ' active') + '" data-v="">全部</span>';
+    host.innerHTML = all + list.map(function(v){
+      var ec = key === 'element' ? D.color[v] : '';
+      var txt = (labels && labels[v]) || v;
+      return '<span class="chip' + (ec ? ' ec' : '') + (state[key] === v ? ' active' : '') + '" data-v="' + v + '"' +
+             (ec ? ' style="--ec:' + ec + '"' : '') + '>' +
+             (withDot && ec ? '<i class="dot"></i>' : '') + txt + '</span>';
+    }).join('');
+    host.addEventListener('click', function(e){
+      var c = e.target.closest ? e.target.closest('.chip') : null;
+      if (!c) return;
+      state[key] = c.dataset.v;
+      Array.prototype.forEach.call(host.children, function(x){ x.classList.toggle('active', x === c); });
+      render();
+    });
+  }
+  chips($('fRegion'), D.regions, 'region', false);
+  chips($('fElement'), D.elements, 'element', true);
+  chips($('fWeapon'), D.weapons, 'weapon', false);
+  chips($('fStar'), ['5', '4'], 'star', false, { '5': '5★', '4': '4★' });
+
+  /* ---------- 「仅看收藏」开关 ---------- */
+  var onlyFav = false;
+  var favChip = document.createElement('span');
+  favChip.className = 'chip';
+  favChip.id = 'favOnly';
+  favChip.textContent = '★ 仅看收藏';
+  favChip.addEventListener('click', function(){
+    onlyFav = !onlyFav;
+    favChip.classList.toggle('active', onlyFav);
+    render();
+  });
+  $('fStar').parentNode.appendChild(favChip);
+
+  function refreshFavChip(){
+    var n = favStore.read().length;
+    favChip.textContent = '★ 仅看收藏（' + n + '）';
+  }
+
+  /* ---------- 搜索 / 排序 ---------- */
+  $('q').addEventListener('input', function(){ state.q = this.value.trim().toLowerCase(); render(); });
+  $('sort').addEventListener('change', function(){ state.sort = this.value; render(); });
+
+  /* ---------- 过滤 + 排序 ---------- */
+  function current(){
+    var favs = favStore.read();
+    var out = L.filter(function(c){
+      if (onlyFav && favs.indexOf(c.id) === -1) return false;
+      if (state.region && c.region !== state.region) return false;
+      if (state.element && c.el !== state.element) return false;
+      if (state.weapon && c.weapon !== state.weapon) return false;
+      if (state.star && String(c.star) !== state.star) return false;
+      if (state.q){
+        var hay = (c.name + c.title + c.faction + c.con + c.region + c.el + c.weapon + (c.tags || []).join('') + (c.quote || '')).toLowerCase();
+        if (hay.indexOf(state.q) === -1) return false;
+      }
+      return true;
+    });
+    var s = state.sort;
+    if (s === 'star') out.sort(function(a, b){ return b.star - a.star || L.indexOf(a) - L.indexOf(b); });
+    else if (s === 'name') out.sort(function(a, b){ return a.name.localeCompare(b.name, 'zh-Hans-CN'); });
+    else if (s === 'region') out.sort(function(a, b){
+      var ra = D.regions.indexOf(a.region), rb = D.regions.indexOf(b.region);
+      return ra - rb || b.star - a.star || L.indexOf(a) - L.indexOf(b);
+    });
+    else if (s === 'element') out.sort(function(a, b){
+      var ea = D.elements.indexOf(a.el), eb = D.elements.indexOf(b.el);
+      return ea - eb || b.star - a.star || L.indexOf(a) - L.indexOf(b);
+    });
+    return out;
+  }
+
+  /* ---------- 渲染网格 ---------- */
+  var roster = $('roster');
+  var shown = [];
+  function render(){
+    shown = current();
+    refreshFavChip();
+    $('hCount').textContent = shown.length;
+    if (!shown.length){
+      roster.innerHTML = '<div class="empty"><b>✦</b>没有符合条件的角色，试试换一组筛选条件</div>';
+      return;
+    }
+    roster.innerHTML = shown.map(function(c, i){
+      return '<article class="card" data-id="' + c.id + '" style="--ec:' + c.color + ';animation:cardIn .42s cubic-bezier(.22,.9,.24,1) both;animation-delay:' + Math.min(i * .022, .5) + 's">' +
+        '<div class="thumb">' +
+          '<img src="' + c.art + '" alt="' + c.name + '" loading="lazy" data-el="' + c.el + '" data-ch="' + c.name + '" onerror="imgFail(this)">' +
+          '<span class="el-badge">' + c.el + '</span>' +
+          '<span class="star-badge">' + '★'.repeat(c.star) + '</span>' +
+        '</div>' +
+        '<div class="c-body">' +
+          '<div class="c-name">' + c.name + '</div>' +
+          '<div class="c-meta">' + c.region + ' · ' + c.weapon + '</div>' +
+          '<div class="c-title">' + c.title + '</div>' +
+        '</div>' +
+      '</article>';
+    }).join('');
+  }
+  var st = document.createElement('style');
+  st.textContent = '@keyframes cardIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}';
+  document.head.appendChild(st);
+
+  /* ---------- 抽屉 ---------- */
+  var mask = $('mask'), drawer = $('drawer');
+  var curIdx = -1;      /* 当前角色在 shown 中的下标 */
+
+  function fill(c){
+    drawer.style.setProperty('--ec', c.color);
+    var art = $('dArt');
+    art.onerror = function(){ imgFail(this); };
+    art.src = c.art;
+    art.setAttribute('data-el', c.el);
+    art.setAttribute('data-ch', c.name);
+    $('dTitle').textContent = c.title + ' · ' + c.region;
+    $('dName').textContent = c.name;
+    $('dSub').textContent = '★'.repeat(c.star) + ' · ' + c.weapon + ' · ' + c.el + '元素';
+
+    $('dBadges').innerHTML =
+      '<span class="badge ec" style="--ec:' + c.color + '"><b>元素</b>｜' + c.el + '</span>' +
+      '<span class="badge"><b>武器</b>｜' + c.weapon + '</span>' +
+      '<span class="badge"><b>国度</b>｜' + c.region + '</span>' +
+      '<span class="badge"><b>归属</b>｜' + c.faction + '</span>' +
+      '<span class="badge"><b>命座</b>｜' + c.con + '</span>' +
+      '<span class="badge"><b>生日</b>｜' + c.bd + '</span>' +
+      '<span class="badge"><b>突破</b>｜' + c.sub + '</span>';
+
+    $('dTags').innerHTML = (c.tags || []).map(function(t){ return '<span class="tag"># ' + t + '</span>'; }).join('');
+    $('dQuote').textContent = c.quote || '';
+    $('dStory').textContent = c.story || '';
+    $('dHighlights').innerHTML = (c.hl || []).map(function(h){ return '<li>' + h + '</li>'; }).join('');
+    $('dExtra').textContent = c.extra || '';
+    $('voteBtn').href = 'vote.html?id=' + c.id;
+    $('dBody').scrollTop = 0;
+    refreshFav();
+  }
+
+  function open(id){
+    var i = shown.findIndex(function(c){ return c.id === id; });
+    if (i < 0){ i = L.findIndex(function(c){ return c.id === id; }); }
+    if (i < 0) return;
+    curIdx = i;
+    fill(shown[i] || L[i]);
+    mask.classList.add('show');
+    drawer.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function close(){
+    mask.classList.remove('show');
+    drawer.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  roster.addEventListener('click', function(e){
+    var card = e.target.closest ? e.target.closest('.card') : null;
+    if (card) open(card.dataset.id);
+  });
+  $('dClose').addEventListener('click', close);
+  mask.addEventListener('click', close);
+  $('prevBtn').addEventListener('click', function(){ if (curIdx > 0) open(shown[curIdx - 1].id); });
+  $('nextBtn').addEventListener('click', function(){ if (curIdx < shown.length - 1) open(shown[curIdx + 1].id); });
+  document.addEventListener('keydown', function(e){
+    if (!drawer.classList.contains('show')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') $('prevBtn').click();
+    if (e.key === 'ArrowRight') $('nextBtn').click();
+  });
+
+  /* ---------- 收藏 ---------- */
+  function refreshFav(){
+    var c = shown[curIdx]; if (!c) return;
+    var isFav = favStore.read().indexOf(c.id) > -1;
+    $('favBtn').className = 'btn sm' + (isFav ? ' faved' : '');
+    $('favBtn').textContent = (isFav ? '★ 已收藏' : '☆ 收藏角色');
+  }
+  $('favBtn').addEventListener('click', function(){
+    var c = shown[curIdx]; if (!c) return;
+    var favs = favStore.read(), i = favs.indexOf(c.id), on;
+    if (i > -1){ favs.splice(i, 1); on = false; } else { favs.push(c.id); on = true; }
+    favStore.write(favs);
+    refreshFav();
+    refreshFavChip();
+    showMsg(on ? '⭐' : '☆', on ? '收藏成功' : '已取消收藏',
+      on ? '「' + c.name + '」已加入你的收藏，收藏记录保存在本机浏览器。'
+         : '已将「' + c.name + '」移出收藏。', c.color);
+  });
+
+  /* ---------- 复制档案 ---------- */
+  $('copyBtn').addEventListener('click', function(){
+    var c = shown[curIdx]; if (!c) return;
+    var text = '【' + c.name + ' · ' + c.title + '】\n' +
+      '星级：' + c.star + '★　元素：' + c.el + '　武器：' + c.weapon + '\n' +
+      '国度：' + c.region + '　归属：' + c.faction + '\n' +
+      '命之座：' + c.con + '　生日：' + c.bd + '　突破：' + c.sub + '\n\n' +
+      '官方档案：' + (c.quote || '') + '\n\n' +
+      '角色故事：' + (c.story || '') + '\n\n' +
+      '角色亮点：\n' + (c.hl || []).map(function(h){ return '· ' + h; }).join('\n') + '\n\n' +
+      '更多设定：' + (c.extra || '');
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    var ok = false;
+    try{ ok = document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+    if (!ok && navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).catch(function(){});
+    }
+    showMsg('✦', '复制成功', '「' + c.name + '」的完整档案已复制到剪贴板。', c.color);
+  });
+
+  /* ---------- 提示弹窗 ---------- */
+  var msgMask = $('msgMask');
+  function showMsg(icon, title, text, color){
+    $('msgIcon').textContent = icon;
+    $('msgTitle').textContent = title;
+    $('msgText').textContent = text;
+    $('msgModal').style.setProperty('--mc', color || 'var(--gold)');
+    msgMask.classList.add('show');
+  }
+  $('msgBtn').addEventListener('click', function(){ msgMask.classList.remove('show'); });
+  msgMask.addEventListener('click', function(e){ if (e.target === msgMask) msgMask.classList.remove('show'); });
+
+  /* ---------- 初始化 ---------- */
+  $('hTotal').textContent = D.count;
+  $('fTotal').textContent = D.count;
+  render();
+  if (qs.get('id')) setTimeout(function(){ open(qs.get('id')); }, 120);
+})();
+</script>
+</body>
+</html>
