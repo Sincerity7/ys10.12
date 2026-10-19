@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="zh-CN" data-page-node-id="pW3AjlqY8Zu345HVMeGXzt">
+<head data-page-node-id="BZw47gOCKGmGannImZWnsc">
+<meta charset="UTF-8" data-page-node-id="JDSQdSJ7b3leH04uwJc1sm">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="AV6p872LjVWR3EJt2LXEvG">
 <title>原神角色图鉴馆｜首页</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css" data-page-node-id="A0NYrxsJhtlJ0zUn15l0Y7">
 <style>
 /* ================= 首页专属样式 ================= */
 
@@ -41,6 +41,27 @@
 }
 .stats .num small{font-size:13px;font-weight:600;margin-left:3px;color:var(--gold);}
 .stats .lab{font-size:11.5px;letter-spacing:3px;color:var(--text-mute);margin-top:9px;}
+
+/* ---------- 配套智能体入口 ---------- */
+.agent-entry{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 auto 42px;max-width:860px;}
+.ae-card{
+  position:relative;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:13px;
+  padding:15px 18px;text-decoration:none;overflow:hidden;
+  background:linear-gradient(180deg,rgba(24,35,43,.92),rgba(15,23,29,.92));
+  border:1px solid var(--line);transition:border-color .28s,transform .28s,box-shadow .3s;
+}
+.ae-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ac,#d3bc8e);opacity:.55;}
+.ae-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--ac,#d3bc8e) 60%,transparent);
+  box-shadow:0 18px 40px -26px var(--ac,#d3bc8e);}
+.ae-card:hover::before{opacity:1;}
+.ae-sigil{
+  width:38px;height:38px;display:grid;place-items:center;font-size:15px;font-weight:800;
+  color:var(--ac,#d3bc8e);border:1px solid color-mix(in srgb,var(--ac,#d3bc8e) 45%,transparent);
+  background:radial-gradient(circle at 50% 30%,color-mix(in srgb,var(--ac,#d3bc8e) 18%,transparent),transparent 72%);
+}
+.ae-body b{display:block;font-size:14px;letter-spacing:2px;color:var(--text);}
+.ae-body span{display:block;margin-top:5px;font-size:11.5px;letter-spacing:1px;color:var(--text-mute);}
+.ae-go{font-size:11.5px;letter-spacing:2px;color:var(--gold);white-space:nowrap;}
 
 /* ---------- 精选轮播 ---------- */
 .featured{position:relative;margin-bottom:20px;border:1px solid var(--line-mid);background:#080d11;overflow:hidden;}
@@ -171,135 +192,152 @@
 }
 @media (max-width:760px){
   .stats{grid-template-columns:repeat(2,1fr);}
+  .agent-entry{grid-template-columns:1fr;gap:10px;}
   .featured .fc-info{max-width:88%;}
   .featured .fc-quote{display:none;}
   .wall{grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;}
 }
 </style>
 </head>
-<body>
+<body data-page-node-id="ieJnDTjK2GUubWXAAIU8Yv">
 
 <!-- ==================== 顶部导航 ==================== -->
-<header class="navbar">
-  <div class="inner">
-    <a class="brand" href="index.html"><span class="gem"></span>原神角色图鉴馆</a>
-    <nav class="nav-links">
-      <a href="index.html" class="active">首页</a>
-      <a href="detail.html">角色图鉴</a>
-      <a href="vote.html">人气投票</a>
+<header class="navbar" data-page-node-id="Zc5KfKENQUeGKUOxFuCcLz">
+  <div class="inner" data-page-node-id="xtiq9p9mtR7LLyZgfE2yFf">
+    <a class="brand" href="index.html" data-page-node-id="ZpZ8WUxFfyaQEvnzUg355d"><span class="gem" data-page-node-id="LcsspneYeDdHXpzj8tqI0b"></span>原神角色图鉴馆</a>
+    <nav class="nav-links" data-page-node-id="JHF7ZU4L8TiGRTr4SkBl0T">
+      <a href="index.html" class="active" data-page-node-id="2w6KIHmzhxvASSkEkmRwIE">首页</a>
+      <a href="detail.html" data-page-node-id="RvOEUpiCgSBvFle39RxI5R">角色图鉴</a>
+      <a href="vote.html" data-page-node-id="G5Gp4FXTSrALDP0hm4L5Nk">人气投票</a>
+    
+      <a href="assistant.html" data-page-node-id="Y0mwXEgvuVr1PaSuLS3mJS">智能助手</a>
     </nav>
   </div>
 </header>
 
-<main class="page">
+<main class="page" data-page-node-id="sM8H6Vpp5xlNsWdQTfzwr4">
 
   <!-- ==================== 主视觉 ==================== -->
-  <section class="hero">
-    <p class="kicker">T E Y V A T &nbsp; C H A R A C T E R &nbsp; A R C H I V E</p>
-    <h1 class="main-title">原神角色图鉴馆</h1>
-    <p class="sub">收录提瓦特 <b id="hCount">124</b> 位可操作角色 · <b>查阅角色档案</b> · <b>参与人气投票</b></p>
+  <section class="hero" data-page-node-id="3o7DArybI5U9Iw7PZOTJBS">
+    <p class="kicker" data-page-node-id="fXD2S66HJ0IIWMaFSA6Axu">T E Y V A T &nbsp; C H A R A C T E R &nbsp; A R C H I V E</p>
+    <h1 class="main-title" data-page-node-id="mbdOStEIs5fIhIafuRTXTq">原神角色图鉴馆</h1>
+    <p class="sub" data-page-node-id="aSC1ynj6o68BnrNxDEYeCl">收录提瓦特 <b id="hCount" data-page-node-id="bOnPmzGWY9d4EV0wIeWAvU">124</b> 位可操作角色 · <b data-page-node-id="B9E2Tkl5bFjoFZCs7eEZLv">查阅角色档案</b> · <b data-page-node-id="q9g7Cg3hC6pUfw6Tj441fd">参与人气投票</b></p>
   </section>
 
   <!-- ==================== 数据统计 ==================== -->
-  <section class="stats" id="stats"></section>
+  <section class="stats" id="stats" data-page-node-id="tWrg6IdbIu2WaHJgxun6Bh"></section>
+
+  <!-- ==================== 配套智能体 ==================== -->
+  <section class="agent-entry reveal" data-page-node-id="YdszYSaXMGbUeyJDRcivWq">
+    <a class="ae-card" href="assistant.html" style="--ac:#d3bc8e" data-page-node-id="ByRoj1RMrSDsuKrVnOW8hN">
+      <span class="ae-sigil" data-page-node-id="1y8Z5B8evoz9nMKHbtAb8z">壹</span>
+      <span class="ae-body" data-page-node-id="kDYUJCSjysPr3FIZJEYpNF"><b data-page-node-id="VQcfMCsMZ64GFa1zZ8qoBS">档案查询智能体</b><span data-page-node-id="uJRrXzuyEG7GXi4S3vy8gf">角色定位 · 突破 / 天赋材料 · 1-90 消耗 · 面板</span></span>
+      <span class="ae-go" data-page-node-id="OKRVVa7MZujTbNaXAfDgrc">查询 →</span>
+    </a>
+    <a class="ae-card" href="assistant.html#team" style="--ac:#b088d8" data-page-node-id="FE2POtbFuTlwQKUccarKLs">
+      <span class="ae-sigil" data-page-node-id="OjRYGHOKdUgTiANUccRolS">贰</span>
+      <span class="ae-body" data-page-node-id="bBFcJ8T7BCw2bKBlGEpqlA"><b data-page-node-id="n2N4TvDPpoy5hFD4FcE7mC">配队推演智能体</b><span data-page-node-id="FZmEUeI76a0tNnyxgLXWUq">推荐队伍 · 输出循环 · 圣遗物 · 抽取建议</span></span>
+      <span class="ae-go" data-page-node-id="s2WBs82tGbw1lnp1rb98OD">推演 →</span>
+    </a>
+  </section>
 
   <!-- ==================== 精选轮播 ==================== -->
-  <section class="sec-head reveal">
-    <h2>精选角色</h2>
-    <span class="hint">自动轮播 · 点击缩略图切换</span>
-    <span class="line"></span>
+  <section class="sec-head reveal" data-page-node-id="KaOiGDCJOkrgZmqz1O3fiW">
+    <h2 data-page-node-id="VUYADZzaq8K5qd2CXrrmCF">精选角色</h2>
+    <span class="hint" data-page-node-id="A4swLOYZPWas311roZ09Io">自动轮播 · 点击缩略图切换</span>
+    <span class="line" data-page-node-id="DORGRFFSIrVyYlYj30Js9m"></span>
   </section>
-  <section class="featured reveal" id="featured">
-    <div class="stage" id="fcStage"></div>
-    <div class="thumbs" id="fcThumbs"></div>
+  <section class="featured reveal" id="featured" data-page-node-id="HkgqmOfP868xHRDu5tkBab">
+    <div class="stage" id="fcStage" data-page-node-id="L86zuTTKG6dG9UzIqY21k8"></div>
+    <div class="thumbs" id="fcThumbs" data-page-node-id="50kS9iUyHPt9lFC92auWZY"></div>
   </section>
 
   <!-- ==================== 元素回廊 ==================== -->
-  <section class="sec-head reveal">
-    <h2>元素回廊</h2>
-    <span class="hint">按元素浏览角色</span>
-    <span class="line"></span>
+  <section class="sec-head reveal" data-page-node-id="aTFIVrZhNwe3fMiq14X8tG">
+    <h2 data-page-node-id="Xuyn5KHXALX4O1GuvRr87P">元素回廊</h2>
+    <span class="hint" data-page-node-id="1FC2PJJYaOnPrydcvuCAre">按元素浏览角色</span>
+    <span class="line" data-page-node-id="kP1zClWKrHB0I5EAVccUCs"></span>
   </section>
-  <section class="elements reveal" id="elements"></section>
+  <section class="elements reveal" id="elements" data-page-node-id="2CMJyDmgsVWmEHFByk8zjT"></section>
 
   <!-- ==================== 全角色墙 ==================== -->
-  <section class="sec-head reveal">
-    <h2>提瓦特全员</h2>
-    <span class="hint" id="wallHint">共 124 位角色</span>
-    <span class="line"></span>
+  <section class="sec-head reveal" data-page-node-id="Mj1FtsG4IVOWAu2HFBycp2">
+    <h2 data-page-node-id="EzJmos3NvZAobUOhJgWsWb">提瓦特全员</h2>
+    <span class="hint" id="wallHint" data-page-node-id="ISZw9mnJHZzIo0ZtjSmrL8">共 124 位角色</span>
+    <span class="line" data-page-node-id="4HsRGuMif27KIWJ10tSfmR"></span>
   </section>
-  <section class="wall reveal" id="wall"></section>
+  <section class="wall reveal" id="wall" data-page-node-id="8lu2SMAkvAC1bwUqPkVClD"></section>
 
   <!-- ==================== 功能卡片 ==================== -->
-  <section class="sec-head reveal" style="margin-top:52px">
-    <h2>功能入口</h2>
-    <span class="line"></span>
+  <section class="sec-head reveal" style="margin-top:52px" data-page-node-id="nF62r7qHoGPPvqbIMdc2mi">
+    <h2 data-page-node-id="xsP6xlUgZyKgL56GrTYJyB">功能入口</h2>
+    <span class="line" data-page-node-id="B5gorClTmadtqDPqFMHN3h"></span>
   </section>
-  <section class="cards reveal">
-    <a class="fcard" href="detail.html">
-      <div class="fc-banner"><img src="img/wide/zhongli.webp" alt="钟离"></div>
-      <div class="fc-body">
-        <span class="no">功 能 Ⅰ</span>
-        <h3>浏览角色档案</h3>
-        <p>124 位角色完整收录：官方档案、角色故事、战斗定位、命之座与趣闻一应俱全。支持按国度、元素、武器、星级筛选与关键词搜索。</p>
-        <span class="go">进入角色图鉴 →</span>
+  <section class="cards reveal" data-page-node-id="27YfMcZOzKMHskKl9fRKpx">
+    <a class="fcard" href="detail.html" data-page-node-id="zyDXQnAHOJDV1sUzFGVtxU">
+      <div class="fc-banner" data-page-node-id="tdwRwB7dnNDvZQYxHxifE6"><img src="img/wide/zhongli.webp" alt="钟离" data-page-node-id="MaFBUibISWvoqi9zOxMrTv"></div>
+      <div class="fc-body" data-page-node-id="v1rvwXdVDeSLSlS9bchh7B">
+        <span class="no" data-page-node-id="mmauQhfnlZse7OQQ1C8n0M">功 能 Ⅰ</span>
+        <h3 data-page-node-id="ZVyTGmiKo16wN8p1oipfc4">浏览角色档案</h3>
+        <p data-page-node-id="TyHttCAEm4JzyTSWRmdVj7">124 位角色完整收录：官方档案、角色故事、战斗定位、命之座与趣闻一应俱全。支持按国度、元素、武器、星级筛选与关键词搜索。</p>
+        <span class="go" data-page-node-id="Q0xtetlIwDlfnIdNJolahB">进入角色图鉴 →</span>
       </div>
     </a>
 
-    <a class="fcard" href="vote.html">
-      <div class="fc-banner"><img src="img/wide/raidenshogun.webp" alt="雷电将军"></div>
-      <div class="fc-body">
-        <span class="no">功 能 Ⅱ</span>
-        <h3>角色人气投票</h3>
-        <p>为你最喜爱的提瓦特角色投上一票：票数实时跳动更新、进度条平滑增长，右侧人气排行榜自动排序，全部记录保存在本机。</p>
-        <span class="go">前往投票 →</span>
+    <a class="fcard" href="vote.html" data-page-node-id="Wb09OdFv7WMLeYkz1o7odv">
+      <div class="fc-banner" data-page-node-id="tBtwFVNTlMLizGvn8ftKf4"><img src="img/wide/raidenshogun.webp" alt="雷电将军" data-page-node-id="BsRjEiIualmcTaBkCruD88"></div>
+      <div class="fc-body" data-page-node-id="EBR3mFlukP5d7JJMbcW4tL">
+        <span class="no" data-page-node-id="YvkUX5hZiu7pi6HEHfFO9A">功 能 Ⅱ</span>
+        <h3 data-page-node-id="hFrC6Kzg2tysvCk2rjxfJ0">角色人气投票</h3>
+        <p data-page-node-id="TaVLcYKzwPkZEmo0BNzehX">为你最喜爱的提瓦特角色投上一票：票数实时跳动更新、进度条平滑增长，右侧人气排行榜自动排序，全部记录保存在本机。</p>
+        <span class="go" data-page-node-id="3446h3ZACSuCp99ADJqljN">前往投票 →</span>
       </div>
     </a>
 
-    <button class="fcard" id="recCard" type="button">
-      <div class="fc-banner"><img src="img/wide/hutao.webp" alt="胡桃"></div>
-      <div class="fc-body">
-        <span class="no">功 能 Ⅲ</span>
-        <h3>今日角色推荐</h3>
-        <p>按日期轮换的每日推荐：点击查看推荐角色的立绘与档案，也可以随机换一位提瓦特的旅人。</p>
-        <span class="go">看看今天是谁 →</span>
+    <button class="fcard" id="recCard" type="button" data-page-node-id="nY154Sai0EG4mJLOlhdqFb">
+      <div class="fc-banner" data-page-node-id="MySyTtyW0ZIpC8SmuKRvGu"><img src="img/wide/hutao.webp" alt="胡桃" data-page-node-id="8fyNDMwC0dwg2jXqS0fC1Z"></div>
+      <div class="fc-body" data-page-node-id="GznvtUZ6Tj1CCHIB57P7sj">
+        <span class="no" data-page-node-id="SsC76c2DPzmzfiFQHEHppr">功 能 Ⅲ</span>
+        <h3 data-page-node-id="NrVFxsEEvVs1LkwQB177hm">今日角色推荐</h3>
+        <p data-page-node-id="jaeBprs3BGquz6Ze45HDDk">按日期轮换的每日推荐：点击查看推荐角色的立绘与档案，也可以随机换一位提瓦特的旅人。</p>
+        <span class="go" data-page-node-id="ZA4YqrE7iD5xMbcAVABUL9">看看今天是谁 →</span>
       </div>
     </button>
   </section>
 
 </main>
 
-<footer>
-  纯 HTML + CSS + 原生 JavaScript 构建 · 立绘画像素材版权归 <b>© HoYoverse（米哈游）</b> 所有，仅作学习交流使用
+<footer data-page-node-id="cxyWKbqWPZyjYoV1zX7wyf">
+  纯 HTML + CSS + 原生 JavaScript 构建 · 立绘画像素材版权归 <b data-page-node-id="4cpLWFwsNT2i4zOCf2LMoE">© HoYoverse（米哈游）</b> 所有，仅作学习交流使用
 </footer>
 
 <!-- ==================== 通用弹窗 ==================== -->
-<div class="modal-mask" id="msgMask">
-  <div class="modal" id="msgModal">
-    <div class="m-icon" id="msgIcon">✦</div>
-    <h3 id="msgTitle">—</h3>
-    <p id="msgText">—</p>
-    <div class="m-btns" id="msgBtns"></div>
+<div class="modal-mask" id="msgMask" data-page-node-id="O7gHEU4Xx60S6E8xChAjhH">
+  <div class="modal" id="msgModal" data-page-node-id="UdxMBC7zPvng0XrfwCVKan">
+    <div class="m-icon" id="msgIcon" data-page-node-id="YrDfsuHfWtLSrYgvdqBSzA">✦</div>
+    <h3 id="msgTitle" data-page-node-id="WZ406cGpkyjIHipc1IgyyS">—</h3>
+    <p id="msgText" data-page-node-id="EHFKy5AqEIksBkZktwqHIB">—</p>
+    <div class="m-btns" id="msgBtns" data-page-node-id="BnrmBGF0w1FF88H0rQitJh"></div>
   </div>
 </div>
 
 <!-- ==================== 角色速览弹窗 ==================== -->
-<div class="modal-mask" id="peekMask">
-  <div class="modal" id="peekModal" style="max-width:520px;padding:0;overflow:hidden;">
-    <div style="position:relative;height:230px;background:#0a1014;overflow:hidden;">
-      <img id="pkArt" src="" alt="" style="width:100%;height:100%;object-fit:cover;object-position:center 16%">
-      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,15,19,.45),rgba(10,15,19,.15) 34%,rgba(16,24,32,1) 100%)"></div>
-      <div style="position:absolute;left:22px;right:22px;bottom:14px;z-index:3">
-        <div id="pkTitle" style="font-size:12px;letter-spacing:4px;color:var(--gold);margin-bottom:6px"></div>
-        <div id="pkName" style="font-size:28px;font-weight:800;letter-spacing:5px;text-shadow:0 3px 16px #000"></div>
+<div class="modal-mask" id="peekMask" data-page-node-id="wVVrCs1LwAgBn7qgWE9ypq">
+  <div class="modal" id="peekModal" style="max-width:520px;padding:0;overflow:hidden;" data-page-node-id="qATYsWEzXtHw5gGavvGDNS">
+    <div style="position:relative;height:230px;background:#0a1014;overflow:hidden;" data-page-node-id="ulmK6v7uwebc3YNnM6Xkmn">
+      <img id="pkArt" src="" alt="" style="width:100%;height:100%;object-fit:cover;object-position:center 16%" data-page-node-id="B6E4qxBNTJHvEGOFBAuQkn">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,15,19,.45),rgba(10,15,19,.15) 34%,rgba(16,24,32,1) 100%)" data-page-node-id="thDle7WpMzrlsq5BLHr4JW"></div>
+      <div style="position:absolute;left:22px;right:22px;bottom:14px;z-index:3" data-page-node-id="l4Fda7HLENotyaACYzmugB">
+        <div id="pkTitle" style="font-size:12px;letter-spacing:4px;color:var(--gold);margin-bottom:6px" data-page-node-id="Yr0wEf8fHGWL5iOTwZmZB5"></div>
+        <div id="pkName" style="font-size:28px;font-weight:800;letter-spacing:5px;text-shadow:0 3px 16px #000" data-page-node-id="U79OGAOiRiBHcqrThBEAYq"></div>
       </div>
     </div>
-    <div style="padding:18px 22px 22px">
-      <div class="badges" id="pkBadges"></div>
-      <p id="pkQuote" style="font-size:13.4px;line-height:1.95;color:var(--text);margin-top:14px"></p>
-      <div class="m-btns">
-        <button class="btn sm" id="pkClose" type="button">关 闭</button>
-        <a class="btn primary sm" id="pkMore" href="detail.html">查看完整档案</a>
+    <div style="padding:18px 22px 22px" data-page-node-id="uHCzAzNvEz4gDKCuPmOscK">
+      <div class="badges" id="pkBadges" data-page-node-id="tFFHRu3IpTW9YGM3vAuoat"></div>
+      <p id="pkQuote" style="font-size:13.4px;line-height:1.95;color:var(--text);margin-top:14px" data-page-node-id="96tEZhdpYOpcVHRqFiN1bH"></p>
+      <div class="m-btns" data-page-node-id="ZZ6GGYnQAszaOtotzx3p20">
+        <button class="btn sm" id="pkClose" type="button" data-page-node-id="DdbHbZrP0cOq7ytpf0VceU">关 闭</button>
+        <a class="btn primary sm" id="pkMore" href="detail.html" data-page-node-id="IRjghXYwckjigf8z9yLN5v">查看完整档案</a>
       </div>
     </div>
   </div>

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="0n6kDU5qTiBDBwnB8Re3qp">
+<head data-page-node-id="e7RGEor2liFKZuOXDSHGFX">
+<meta charset="UTF-8" data-page-node-id="vtrjPV9DeqpneFSn3RGtqh">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="2xKNBgf6jM3ykKhxSpbWS6">
+<title>原神角色图鉴馆｜档案双子星</title>
+<link rel="stylesheet" href="style.css" data-page-node-id="bwKr5ulMVHTKUGchYSz0NM">
+<style>
+/* ================= 智能体页专属样式 ================= */
+
+/* ---------- 主视觉 ---------- */
+.ahero{text-align:center;padding:4px 0 6px;}
+.ahero .kicker{
+  font-size:12px;letter-spacing:8px;color:var(--gold);opacity:.92;margin-bottom:14px;
+  display:flex;align-items:center;justify-content:center;gap:14px;
+}
+.ahero .kicker::before,.ahero .kicker::after{content:"";width:56px;height:1px;background:linear-gradient(90deg,transparent,var(--line-strong));}
+.ahero .kicker::after{background:linear-gradient(270deg,transparent,var(--line-strong));}
+.ahero h1{
+  font-size:clamp(30px,4.6vw,48px);letter-spacing:clamp(6px,1.2vw,14px);font-weight:800;
+  color:var(--gold-bright);line-height:1.16;
+  text-shadow:0 0 26px rgba(236,217,171,.28),0 0 60px rgba(211,188,142,.14);
+}
+.ahero .sub{margin-top:14px;font-size:13.5px;letter-spacing:3px;color:var(--text-dim);}
+.ahero .flow{
+  display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+  margin-top:18px;font-size:12px;letter-spacing:1.5px;color:var(--text-mute);
+}
+.ahero .flow b{
+  font-weight:700;color:var(--gold);border:1px solid var(--line);padding:4px 11px;
+  background:rgba(255,255,255,.02);
+}
+.ahero .flow i{font-style:normal;color:var(--line-strong);}
+
+/* ---------- 智能体选择卡 ---------- */
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0 20px;}
+.agent-tab{
+  position:relative;display:flex;align-items:center;gap:14px;text-align:left;cursor:pointer;
+  padding:16px 18px;font-family:inherit;color:var(--text);
+  background:linear-gradient(180deg,rgba(24,35,43,.92),rgba(15,23,29,.92));
+  border:1px solid var(--line);overflow:hidden;
+  transition:border-color .28s,box-shadow .32s,transform .28s,background .28s;
+}
+.agent-tab::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ac,var(--gold));
+  opacity:.45;transition:opacity .28s,box-shadow .28s;
+}
+.agent-tab:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--ac,#d3bc8e) 55%,transparent);}
+.agent-tab.on{
+  border-color:color-mix(in srgb,var(--ac,#d3bc8e) 70%,transparent);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--ac,#d3bc8e) 26%,transparent),
+             0 22px 46px -26px var(--ac,#d3bc8e);
+  background:linear-gradient(180deg,rgba(30,43,52,.96),rgba(17,26,32,.96));
+}
+.agent-tab.on::before{opacity:1;box-shadow:0 0 16px var(--ac,var(--gold));}
+.agent-tab .sigil{
+  flex:none;width:46px;height:46px;display:grid;place-items:center;
+  font-size:18px;font-weight:800;letter-spacing:0;color:var(--ac,var(--gold));
+  border:1px solid color-mix(in srgb,var(--ac,#d3bc8e) 46%,transparent);
+  background:radial-gradient(circle at 50% 30%,color-mix(in srgb,var(--ac,#d3bc8e) 20%,transparent),transparent 72%);
+  text-shadow:0 0 14px color-mix(in srgb,var(--ac,#d3bc8e) 60%,transparent);
+}
+.agent-tab .at-body{min-width:0;flex:1;display:flex;flex-direction:column;gap:6px;}
+.agent-tab .at-name{
+  display:flex;align-items:baseline;gap:9px;white-space:nowrap;
+  font-size:15.5px;font-weight:800;letter-spacing:2px;color:var(--text);
+}
+.agent-tab .at-name em{font-style:normal;font-size:10px;letter-spacing:1.2px;color:var(--text-mute);font-weight:400;}
+.agent-tab .at-tag{
+  font-size:11.5px;letter-spacing:1.2px;color:var(--text-dim);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.agent-tab .at-state{
+  margin-left:auto;flex:none;font-size:10.5px;letter-spacing:1.5px;color:var(--text-mute);
+  display:flex;align-items:center;gap:6px;
+}
+.agent-tab .dot{width:6px;height:6px;border-radius:50%;background:#7ec26a;box-shadow:0 0 9px #7ec26a;}
+
+/* ---------- 主体布局 ---------- */
+.chat-shell{display:grid;grid-template-columns:282px 1fr;gap:16px;align-items:start;--ag:#d3bc8e;}
+
+/* 左侧信息栏 */
+.side{
+  position:sticky;top:calc(var(--nav-h) + 16px);
+  border:1px solid var(--line);background:linear-gradient(180deg,rgba(22,32,39,.86),rgba(13,20,25,.9));
+  padding:18px 16px;
+}
+.side .side-head{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--line);}
+.side .side-head .sigil{
+  width:34px;height:34px;display:grid;place-items:center;font-size:14px;font-weight:800;
+  color:var(--ag);border:1px solid color-mix(in srgb,var(--ag) 48%,transparent);
+  background:radial-gradient(circle at 50% 30%,color-mix(in srgb,var(--ag) 18%,transparent),transparent 72%);
+}
+.side .side-head b{font-size:13.5px;letter-spacing:2px;color:var(--text);}
+.side .side-head span{display:block;font-size:10.5px;letter-spacing:1.5px;color:var(--text-mute);margin-top:3px;}
+.side-body{display:none;}
+.side-body.on{display:block;animation:fadeUp .38s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.side h4{
+  font-size:11.5px;letter-spacing:3px;color:var(--gold);margin:18px 0 8px;
+  display:flex;align-items:center;gap:8px;
+}
+.side h4::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent);}
+.side ul{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.side li{font-size:12.5px;line-height:1.7;color:var(--text-dim);padding-left:13px;position:relative;}
+.side li::before{content:"◆";position:absolute;left:0;top:2px;font-size:8px;color:var(--ag);}
+.side .tip{
+  margin-top:16px;padding:10px 12px;font-size:11.5px;line-height:1.8;color:var(--text-mute);
+  background:rgba(0,0,0,.25);border-left:2px solid color-mix(in srgb,var(--ag) 55%,transparent);
+}
+.side .tip b{color:var(--gold);font-weight:600;}
+
+/* 聊天面板 */
+.chat{
+  display:flex;flex-direction:column;min-height:640px;
+  border:1px solid var(--line-mid);
+  background:linear-gradient(180deg,rgba(12,19,24,.94),rgba(9,14,18,.97));
+  box-shadow:0 30px 70px -40px #000;
+}
+.chat-head{
+  display:flex;align-items:center;gap:12px;padding:13px 18px;
+  border-bottom:1px solid var(--line);background:rgba(0,0,0,.24);
+}
+.chat-head .sigil{
+  width:36px;height:36px;display:grid;place-items:center;font-size:15px;font-weight:800;color:var(--ag);
+  border:1px solid color-mix(in srgb,var(--ag) 46%,transparent);
+  background:radial-gradient(circle at 50% 30%,color-mix(in srgb,var(--ag) 18%,transparent),transparent 72%);
+}
+.chat-head .ch-name{font-size:14.5px;font-weight:800;letter-spacing:2px;}
+.chat-head .ch-name small{font-size:10.5px;letter-spacing:1.5px;color:var(--text-mute);margin-left:8px;font-weight:400;}
+.chat-head .ch-tag{font-size:11px;letter-spacing:1.5px;color:var(--text-dim);margin-top:3px;}
+.chat-head .ch-actions{margin-left:auto;display:flex;gap:8px;align-items:center;}
+.chat-head .live{display:flex;align-items:center;gap:6px;font-size:10.5px;letter-spacing:1.5px;color:var(--text-mute);}
+.chat-head .live i{width:6px;height:6px;border-radius:50%;background:#7ec26a;box-shadow:0 0 9px #7ec26a;animation:livePulse 2.4s ease-in-out infinite;font-style:normal;}
+@keyframes livePulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+.msgs{
+  flex:1;overflow-y:auto;padding:18px 18px 6px;
+  display:flex;flex-direction:column;gap:14px;min-height:380px;max-height:min(58vh,620px);
+  scroll-behavior:smooth;
+}
+
+/* 消息 */
+.msg-row{display:flex;animation:msgIn .34s cubic-bezier(.22,.9,.24,1) both;}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.msg-row.user{justify-content:flex-end;}
+.bubble{max-width:min(720px,94%);font-size:13.4px;line-height:1.9;}
+.msg-row.user .bubble{
+  padding:10px 15px;color:var(--gold-bright);letter-spacing:.5px;
+  background:linear-gradient(180deg,rgba(211,188,142,.16),rgba(211,188,142,.07));
+  border:1px solid var(--line-mid);border-right:2px solid var(--gold);
+}
+.msg-row.bot .bubble{max-width:100%;width:100%;}
+.bot-card{
+  width:100%;padding:14px 16px;
+  background:linear-gradient(180deg,rgba(24,36,44,.94),rgba(15,23,29,.94));
+  border:1px solid var(--line);border-left:2px solid var(--ec,var(--gold));
+  box-shadow:0 14px 34px -26px #000;
+}
+.msg-sys{
+  align-self:center;font-size:11px;letter-spacing:1.5px;color:var(--text-mute);
+  padding:3px 12px;border:1px dashed var(--line);background:rgba(0,0,0,.22);
+}
+
+.rc-head{display:flex;gap:12px;align-items:center;padding-bottom:11px;border-bottom:1px dashed var(--line);}
+.rc-ava{
+  flex:none;width:46px;height:46px;overflow:hidden;display:grid;place-items:center;
+  background:#0c1317;border:1px solid color-mix(in srgb,var(--ec,var(--gold)) 42%,transparent);
+  color:var(--ec,var(--gold));font-size:17px;font-weight:800;
+  box-shadow:inset 0 0 22px color-mix(in srgb,var(--ec,#d3bc8e) 18%,transparent);
+}
+.rc-ava img{width:100%;height:100%;object-fit:cover;object-position:center 24%;}
+.rc-title{min-width:0;}
+.rc-name{font-size:17px;font-weight:800;letter-spacing:2px;color:var(--ec,var(--gold));line-height:1.3;}
+.rc-name span{font-size:11px;letter-spacing:2px;color:var(--text-mute);margin-left:9px;font-weight:400;}
+.rc-meta{font-size:11.5px;letter-spacing:1px;color:var(--text-dim);margin-top:5px;}
+
+.rc-blk{margin-top:13px;}
+.rc-h{
+  font-size:12px;letter-spacing:2.5px;color:var(--gold-bright);
+  display:flex;align-items:center;gap:8px;margin-bottom:7px;
+}
+.rc-h::before{content:"";width:4px;height:12px;background:var(--ec,var(--gold));box-shadow:0 0 10px var(--ec,var(--gold));}
+.rc-blk ul{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.rc-blk li{position:relative;padding-left:14px;font-size:13.1px;line-height:1.9;color:var(--text);word-break:break-word;}
+.rc-blk li::before{content:"·";position:absolute;left:3px;top:0;color:var(--ec,var(--gold));font-weight:700;}
+.rc-blk.plain{margin-top:0;}
+
+.rc-acts{
+  display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+  margin-top:14px;padding-top:11px;border-top:1px dashed var(--line);
+}
+.mini-btn{
+  font-family:inherit;font-size:11.5px;letter-spacing:1.5px;cursor:pointer;
+  padding:6px 13px;color:var(--text-dim);background:rgba(255,255,255,.03);
+  border:1px solid var(--line);transition:all .22s;text-decoration:none;display:inline-flex;align-items:center;
+}
+.mini-btn:hover{color:var(--gold-bright);border-color:var(--line-strong);background:rgba(211,188,142,.1);}
+.mini-btn.primary{
+  color:#17130d;font-weight:700;border-color:transparent;
+  background:linear-gradient(180deg,#f0e2bd,#c9ae76);
+}
+.mini-btn.primary:hover{filter:brightness(1.06);color:#17130d;}
+.mini-btn.ok{color:#0d1114;background:#8fd07a;border-color:transparent;}
+.mini-btn.ghost{color:var(--text-mute);}
+
+/* 开场白 */
+.intro-card{border-left-width:3px;}
+.intro-text{
+  margin-top:12px;font-size:13.2px;line-height:2.05;color:var(--text);
+  padding:12px 14px;background:rgba(0,0,0,.24);
+  border-left:2px solid color-mix(in srgb,var(--ec,#d3bc8e) 50%,transparent);
+}
+
+/* 输入中 */
+.typing{display:none;align-items:center;gap:5px;padding:0 20px 8px;color:var(--text-mute);font-size:11px;letter-spacing:1px;}
+.typing i{width:5px;height:5px;border-radius:50%;background:var(--ag);animation:blink 1.2s infinite;font-style:normal;}
+.typing i:nth-child(2){animation-delay:.18s;}
+.typing i:nth-child(3){animation-delay:.36s;}
+@keyframes blink{0%,100%{opacity:.2;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+
+/* 快捷提问 */
+.chips{display:flex;gap:7px;flex-wrap:wrap;padding:0 18px 10px;}
+.qchip{
+  font-family:inherit;font-size:11.5px;letter-spacing:1px;cursor:pointer;
+  padding:6px 12px;color:var(--text-dim);background:rgba(255,255,255,.02);
+  border:1px solid var(--line);transition:all .22s;
+}
+.qchip:hover{color:var(--gold-bright);border-color:color-mix(in srgb,var(--ag) 60%,transparent);background:rgba(211,188,142,.09);transform:translateY(-1px);}
+
+/* 输入区 */
+.composer{
+  display:flex;align-items:flex-end;gap:10px;padding:12px 16px 14px;
+  border-top:1px solid var(--line);background:rgba(0,0,0,.26);
+}
+.composer .field{
+  flex:1;display:flex;align-items:center;gap:10px;padding:8px 13px;
+  background:rgba(255,255,255,.03);border:1px solid var(--line);
+  transition:border-color .25s,box-shadow .25s;
+}
+.composer .field:focus-within{border-color:color-mix(in srgb,var(--ag) 62%,transparent);box-shadow:0 0 0 3px color-mix(in srgb,var(--ag) 10%,transparent);}
+.composer textarea{
+  flex:1;background:transparent;border:none;outline:none;resize:none;
+  color:var(--text);font-size:13.5px;line-height:1.7;font-family:inherit;
+  max-height:132px;min-height:24px;padding:2px 0;
+}
+.composer textarea::placeholder{color:var(--text-mute);}
+.composer .send{
+  flex:none;width:98px;height:44px;border:none;cursor:pointer;font-family:inherit;
+  font-size:13px;font-weight:800;letter-spacing:2.5px;color:#17130d;
+  background:linear-gradient(180deg,#f0e2bd,#c9ae76);
+  transition:filter .2s,transform .16s;
+}
+.composer .send:hover{filter:brightness(1.07);}
+.composer .send:active{transform:scale(.97);}
+.composer .send:disabled{filter:grayscale(.5) brightness(.8);cursor:default;}
+.hint{font-size:10.5px;letter-spacing:1px;color:var(--text-mute);text-align:center;padding:0 0 12px;}
+
+
+/* ---------- 接入配置（自定义外接模型） ---------- */
+.chat-shell{grid-template-columns:322px 1fr;}
+.side{max-height:calc(100vh - var(--nav-h) - 32px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;}
+.side::-webkit-scrollbar{width:5px;}
+.side::-webkit-scrollbar-thumb{background:rgba(211,188,142,.22);}
+.side::-webkit-scrollbar-track{background:transparent;}
+#cfgState{transition:color .25s;}
+#cfgState.on{color:#8fd07a;}
+.cfg{display:flex;flex-direction:column;gap:10px;margin-top:13px;}
+.cfg-item{display:flex;flex-direction:column;gap:5px;min-width:0;}
+.cfg-lb{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:10.5px;letter-spacing:1.2px;color:var(--text-dim);}
+.cfg-lb b{font-weight:600;}
+.cfg-lb em{font-style:normal;font-size:9.5px;letter-spacing:1px;color:var(--text-mute);}
+.cfg-lb .eye{
+  border:1px solid var(--line);background:transparent;cursor:pointer;font-family:inherit;
+  font-size:9.5px;letter-spacing:1px;color:var(--text-mute);padding:1px 6px;
+}
+.cfg-lb .eye:hover{color:var(--gold);border-color:var(--line-mid);}
+.cfg-in,.cfg-sel,.cfg-ta{
+  width:100%;box-sizing:border-box;padding:8px 10px;font-family:inherit;
+  font-size:12px;line-height:1.5;color:var(--text);
+  background:rgba(0,0,0,.34);border:1px solid var(--line);outline:none;
+  transition:border-color .22s,box-shadow .22s,background .22s;
+}
+.cfg-ta{resize:vertical;min-height:62px;max-height:150px;font-size:11.5px;line-height:1.7;}
+.cfg-in:focus,.cfg-sel:focus,.cfg-ta:focus{
+  border-color:var(--line-mid);background:rgba(0,0,0,.46);
+  box-shadow:0 0 0 3px rgba(211,188,142,.08);
+}
+.cfg-in:disabled,.cfg-sel:disabled,.cfg-ta:disabled{opacity:.45;cursor:not-allowed;}
+.cfg-in::placeholder,.cfg-ta::placeholder{color:#6d675c;}
+.cfg-sel{
+  appearance:none;cursor:pointer;padding-right:26px;
+  background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);
+  background-position:calc(100% - 15px) 50%,calc(100% - 10px) 50%;
+  background-size:5px 5px,5px 5px;background-repeat:no-repeat;
+}
+.cfg-sel option{background:#121a20;color:var(--text);}
+.cfg-row{display:grid;grid-template-columns:1fr 80px;gap:8px;}
+.cfg-help{font-size:10px;line-height:1.65;color:var(--text-mute);}
+.cfg-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:3px;}
+.cfg-btn{
+  height:34px;border:1px solid var(--line-mid);cursor:pointer;font-family:inherit;
+  font-size:11.5px;letter-spacing:1.5px;color:var(--text-dim);
+  background:rgba(255,255,255,.03);transition:color .2s,border-color .2s,background .2s,filter .2s;
+}
+.cfg-btn:hover{color:var(--gold-bright);border-color:var(--line-strong);background:rgba(211,188,142,.1);}
+.cfg-btn.primary{color:#17130d;font-weight:800;border-color:transparent;background:linear-gradient(180deg,#f0e2bd,#c9ae76);}
+.cfg-btn.primary:hover{filter:brightness(1.06);color:#17130d;}
+.cfg-btn:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.4);}
+.cfg-btn.wide{width:100%;margin-top:2px;font-size:11px;letter-spacing:1px;height:31px;}
+.cfg-msg{
+  display:none;margin-top:2px;padding:7px 9px;font-size:10.5px;line-height:1.65;
+  border-left:2px solid var(--line-mid);background:rgba(0,0,0,.28);color:var(--text-dim);
+  word-break:break-word;
+}
+.cfg-msg.ok{color:#a8d99a;border-left-color:#7ec26a;}
+.cfg-msg.warn{color:#e8b48a;border-left-color:#ef7938;}
+.cfg-foot{font-size:9.5px;line-height:1.7;color:var(--text-mute);}
+.cfg-sep{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin:18px 0 4px;}
+.cfg-side .side-body{margin-top:2px;}
+
+/* ---------- 外接模型回复 ---------- */
+.chat-head .live.ext i{background:#7ec3e8;box-shadow:0 0 9px #7ec3e8;}
+.llm-card .llm-tag{
+  display:flex;align-items:center;gap:7px;font-size:9.5px;letter-spacing:1.6px;
+  color:var(--text-mute);margin-bottom:9px;
+}
+.llm-card .llm-tag::before{content:"";width:5px;height:5px;background:var(--ec);box-shadow:0 0 8px var(--ec);}
+.llm-body{font-size:12.8px;line-height:1.85;color:var(--text-dim);word-break:break-word;}
+.llm-body p{margin:0;}
+.llm-body .md-h{font-size:12.8px;font-weight:800;letter-spacing:1px;color:var(--gold);margin:11px 0 5px;}
+.llm-body .md-h:first-child{margin-top:0;}
+.llm-body ul{list-style:none;display:flex;flex-direction:column;gap:4px;margin:2px 0 6px;}
+.llm-body li{position:relative;padding-left:14px;}
+.llm-body li::before{content:"·";position:absolute;left:2px;color:var(--ec);font-weight:800;}
+.llm-body b{color:var(--text);font-weight:700;}
+.llm-body code{padding:1px 4px;background:rgba(255,255,255,.07);font-size:.94em;}
+
+@media (max-width:960px){
+  .chat-shell{grid-template-columns:1fr;}
+  .side{position:static;order:2;max-height:none;overflow:visible;}
+  .tabs{grid-template-columns:1fr;}
+  .msgs{max-height:56vh;}
+}
+@media (max-width:480px){
+  .navbar .inner{padding:0 8px;gap:5px;}
+  .brand{font-size:11.5px;letter-spacing:0;gap:5px;}
+  .nav-links a{padding:0 5px;font-size:12px;}
+}
+@media (max-width:560px){
+  .navbar .inner{padding:0 12px;gap:8px;}
+  .brand{font-size:12.5px;letter-spacing:1px;gap:6px;}
+  .brand .gem{width:8px;height:8px;}
+  .nav-links a{padding:0 7px;font-size:12.5px;letter-spacing:0;}
+  .ahero{padding:0 0 4px;}
+  .ahero h1{letter-spacing:5px;}
+  .ahero .sub{font-size:12px;letter-spacing:1.5px;line-height:1.8;}
+  .ahero .kicker{letter-spacing:4px;font-size:10.5px;}
+  .agent-tab{padding:13px 14px;gap:11px;}
+  .agent-tab .at-state{display:none;}
+  .agent-tab .at-name{font-size:14px;letter-spacing:1px;}
+  .agent-tab .at-name em{display:none;}
+  .agent-tab .at-tag{font-size:11px;}
+  .chat-head{padding:11px 13px;gap:10px;}
+  .chat-head .ch-name{font-size:13px;letter-spacing:1px;}
+  .chat-head .live{display:none;}
+  .msgs{padding:14px 12px 4px;max-height:52vh;}
+  .chips{padding:0 12px 8px;}
+  .composer{padding:10px 12px 12px;}
+  .composer .send{width:72px;letter-spacing:1px;font-size:12px;}
+  .rc-name{font-size:15px;letter-spacing:1px;}
+  .rc-meta{font-size:10.5px;line-height:1.6;}
+}
+</style>
+</head>
+<body data-agent="archive" data-page-node-id="ln2j0xm9fNWhUoWRnw2GfM">
+
+<header class="navbar" data-page-node-id="XDi9cBIvqS3sYkrug1VEbK">
+  <div class="inner" data-page-node-id="Izupj4Rym83tmRB2yDCI4x">
+    <a class="brand" href="index.html" data-page-node-id="ghMHKyeKkV20rWRFyHVKSm"><span class="gem" data-page-node-id="WSE30sNBx0LYrTaj1MndUO"></span>原神角色图鉴馆</a>
+    <nav class="nav-links" data-page-node-id="IFWQtWWABZnpQlmgEG15uX">
+      <a href="index.html" data-page-node-id="CUs8vXPuG01tW6ZO0i3MfH">首页</a>
+      <a href="detail.html" data-page-node-id="vbgeWi84DLLuLE5MlmWqUn">角色图鉴</a>
+      <a href="vote.html" data-page-node-id="BsFbhgRJhdPOxqzdJvjekk">人气投票</a>
+      <a href="assistant.html" class="active" data-page-node-id="X5knsiPuDg7qCiQuLOIL11">智能助手</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page" data-page-node-id="VN6HmZPs1SoMI2THjYOTEw">
+
+  <section class="ahero" data-page-node-id="ufEBjhD1WKq2pcyKj1gILK">
+    <div class="kicker" data-page-node-id="ftq6ZOPcNI15Qjsel8Ok1c">TWIN AGENTS · 配套助手</div>
+    <h1 data-page-node-id="FT1KJ80sJpl5pc4otzSQ4O">提瓦特档案双子星</h1>
+    <p class="sub" data-page-node-id="GRYREtJmVnPxpKnkPdZkr5">一号查档案与材料，二号排配队与循环，输出结果可直接复制接力</p>
+    <div class="flow" data-page-node-id="FgiL5yNe8pso1U6qAQNbaJ">
+      <b data-page-node-id="GvFxzcelMucuMvAeTrkrp8">① 档案查询</b><i data-page-node-id="7Xet7fkECgjYryvNQnkyX8">→</i><b data-page-node-id="QiOTftCaBUJcOusVkOHRmF">② 复制资料卡</b><i data-page-node-id="FND4lMZBBgXuhv7Qu0vKRD">→</i><b data-page-node-id="tRmhUtr88DAFnH465jOM09">③ 粘贴给配队助手</b><i data-page-node-id="dpKrbtl702x2kRrx4kK2GW">→</i><b data-page-node-id="W9lHACJRjGfX8t1ACjsvVN">④ 配队推演</b>
+    </div>
+  </section>
+
+  <section class="tabs" data-page-node-id="aSGpkDv2pING4AGBaDRy9W">
+    <button class="agent-tab on" data-agent="archive" style="--ac:#d3bc8e" data-page-node-id="PftpJ3FhAud03dFoj21sNd">
+      <span class="sigil" data-page-node-id="1tCCf4Aq4vdo3RT88dSffP">壹</span>
+      <span class="at-body" data-page-node-id="ONnIwsJAp5CURZZZaITkng">
+        <span class="at-name" data-page-node-id="HXPUeCg8Wbw4DGG0fsgvTN">档案查询智能体<em data-page-node-id="GPE7wg5ljnHVVZUZcI6eXK">ARCHIVE · 01</em></span>
+        <span class="at-tag" data-page-node-id="ifyPzLBVpVyYU5GgrCMiBb">定位 / 突破材料 / 天赋材料 / 1-90 消耗 / 面板</span>
+      </span>
+      <span class="at-state" data-page-node-id="Z3RMnB1c042d6C7FyU6LbC"><i class="dot" data-page-node-id="WL2BPAlZFzbfO8483URitE"></i>在线</span>
+    </button>
+    <button class="agent-tab" data-agent="team" style="--ac:#b088d8" data-page-node-id="wYuELVFpkpqWjcJZHBibj1">
+      <span class="sigil" data-page-node-id="XEm6IGGz3jFcBM8RLnvy7T">贰</span>
+      <span class="at-body" data-page-node-id="DkXgvrX6zwJehVSUAAIeiw">
+        <span class="at-name" data-page-node-id="7LYaWUvEOGV5dA6hRIqp0d">配队推演智能体<em data-page-node-id="YDPhnmuqkBXGePJxgJ8A0r">TEAM · 02</em></span>
+        <span class="at-tag" data-page-node-id="QxDpAtO0W0NYG5YaUdiY21">推荐队伍 / 输出循环 / 圣遗物 / 抽取建议</span>
+      </span>
+      <span class="at-state" data-page-node-id="FCv1YzsgaNtwilkmWfBH9Z"><i class="dot" data-page-node-id="U0HnCQYWZ7ldNkRBStxhOM"></i>在线</span>
+    </button>
+  </section>
+
+  <div class="chat-shell" style="--ag:#d3bc8e" data-page-node-id="JWQdgNj6B6cyVodtt5ASQ1">
+
+    <aside class="side cfg-side">
+      <div class="side-head">
+        <span class="sigil">配</span>
+        <div><b>接入配置</b><span id="cfgState">本地引擎 · 离线可用</span></div>
+      </div>
+
+      <div id="cfgPanel">
+        <div class="cfg">
+          <label class="cfg-item">
+            <span class="cfg-lb"><b>接口类型</b></span>
+            <select class="cfg-sel" id="cfgProvider">
+              <option value="coze">扣子 Coze（Bot）</option>
+              <option value="adp">腾讯智能体开发平台（ADP / LKE）</option>
+              <option value="ark">火山方舟（模型接入点）</option>
+              <option value="openai">通用 · OpenAI 兼容</option>
+              <option value="local">本地知识引擎（离线，无需配置）</option>
+            </select>
+            <span class="cfg-help" id="hintProv"></span>
+          </label>
+
+          <label class="cfg-item" data-f="key">
+            <span class="cfg-lb"><b id="lblKey">AppKey</b><button type="button" class="eye" id="cfgEye">显示</button></span>
+            <input class="cfg-in" id="cfgKey" type="password" autocomplete="off" spellcheck="false">
+            <span class="cfg-help" id="hintKey"></span>
+          </label>
+
+          <label class="cfg-item" data-f="base">
+            <span class="cfg-lb"><b>接口地址</b></span>
+            <input class="cfg-in" id="cfgBase" autocomplete="off" spellcheck="false" placeholder="https://…">
+            <span class="cfg-help" id="hintBase"></span>
+          </label>
+
+          <label class="cfg-item" data-f="model">
+            <span class="cfg-lb"><b id="lblModel">Bot ID</b></span>
+            <input class="cfg-in" id="cfgModel" autocomplete="off" spellcheck="false">
+            <span class="cfg-help" id="hintModel"></span>
+          </label>
+
+          <div class="cfg-btns">
+            <button type="button" class="cfg-btn primary" id="cfgSave">保存配置</button>
+            <button type="button" class="cfg-btn" id="cfgTest">测试连接</button>
+          </div>
+          <div class="cfg-msg" id="cfgMsg"></div>
+          <div class="cfg-foot">密钥只保存在本机浏览器 localStorage，不写入页面源码、不上传服务器；共用设备请点下方按钮清除。</div>
+          <button type="button" class="cfg-btn wide" id="cfgClear">清除本地配置与记录</button>
+        </div>
+      </div>
+
+      <div class="cfg-sep"></div>
+
+      <div class="side-head" style="border-bottom:none;padding-bottom:6px;">
+        <span class="sigil" id="sideSigil">壹</span>
+        <div><b id="sideTitle">能力清单</b><span id="sideSub">DATA · 124 位角色已接入</span></div>
+      </div>
+
+      <div class="side-body on" data-agent="archive">
+        <h4>可查询内容</h4>
+        <ul>
+          <li>角色背景故事与人物关系</li>
+          <li>突破材料（1→90，含摩拉）</li>
+          <li>天赋升级材料（三个天赋 1→10）</li>
+          <li>1~90 级所需经验书与摩拉</li>
+          <li>角色定位、90 级基础面板</li>
+          <li>武器与圣遗物速览</li>
+        </ul>
+        <h4>提问格式</h4>
+        <ul>
+          <li>雷电将军1-90级材料清单</li>
+          <li>钟离角色档案</li>
+          <li>胡桃天赋升级材料</li>
+          <li>把结果交给下一个智能体</li>
+        </ul>
+        <div class="tip">数据按官方数值整理，材料清单已分条罗列，<b>可直接复制</b>。</div>
+      </div>
+
+      <div class="side-body" data-agent="team">
+        <h4>可推演内容</h4>
+        <ul>
+          <li>推荐队伍与四人分工</li>
+          <li>输出手法与循环流程</li>
+          <li>圣遗物套装、主副词条</li>
+          <li>抽取优先级与命座建议</li>
+          <li>继续追问优化配队</li>
+        </ul>
+        <h4>接驳方式</h4>
+        <ul>
+          <li>直接粘贴 1 号输出的角色资料</li>
+          <li>或直接输入「角色名 + 配队」</li>
+          <li>点击档案卡片上的「一键转交」</li>
+        </ul>
+        <div class="tip">识别到档案字段后，会<b>自动读取定位与面板</b>再推演。</div>
+      </div>
+    </aside>
+
+    <section class="chat" data-page-node-id="YQsTCd1057LQ2gFW6H8DGB">
+      <div class="chat-head" data-page-node-id="MGm1eoH2XdF4aFkfWawLGD">
+        <span class="sigil" id="chatSigil" data-page-node-id="HEq4LdDZ5haryqftpBPtJz">壹</span>
+        <div data-page-node-id="szWBKyIQTWO9U3qnocNFgy">
+          <div class="ch-name" data-page-node-id="DnJP8y8TwXRX3pswDOD5dI"><span id="chatName" data-page-node-id="5mJTBnChWaxyyvXthEtoKg">档案查询智能体</span><small id="chatCode" data-page-node-id="6ndSBDsMcOyFGJ3qhVx4q8">ARCHIVE · 01</small></div>
+          <div class="ch-tag" id="chatTag" data-page-node-id="TdxvqmK6SxINh288Cn9qa6">角色档案 / 材料清单</div>
+        </div>
+        <div class="ch-actions" data-page-node-id="xWHPffuOodrUBE4EQ65mUw">
+          <span class="live" id="liveState" title="接入状态"><i></i>本地知识引擎</span>
+          <button class="mini-btn ghost" id="clear" data-page-node-id="sNTte0baFADFuacf4PI7V4">清空对话</button>
+        </div>
+      </div>
+
+      <div class="msgs" id="msgs" data-page-node-id="BirEXdflQfLHnW3e5duLIk"></div>
+      <div class="typing" id="typing" data-page-node-id="3pYEbcrh05L6bbQxc0k9Pp"><i data-page-node-id="xmIbYeo6GI056C8rdi2V1C"></i><i data-page-node-id="CQFSsLFeuK1LfnsFllkAz7"></i><i data-page-node-id="IoBGSHcgPB6xmqFhSuKVch"></i><span data-page-node-id="kDmQMfLeAhyGv7fl2s2GFO">正在整理档案…</span></div>
+      <div class="chips" id="chips" data-page-node-id="i0AGdgMzeu0W55EitwA3u2"></div>
+
+      <form class="composer" id="composer" data-page-node-id="pZ3G7IVZlV161mEH0tKtFu">
+        <div class="field" data-page-node-id="4X1j4ZpQANfAOjD4UZyITk">
+          <textarea id="input" rows="1" placeholder="输入角色名或「雷电将军1-90级材料清单」…"></textarea>
+        </div>
+        <button class="send" id="send" type="submit" data-page-node-id="HqBW7t6GVyeJlP9dlBHmZe">发送</button>
+      </form>
+      <div class="hint" data-page-node-id="IzLapZFkVuTntkARFCB9ER">Enter 发送 · Shift + Enter 换行 · 结果支持一键复制</div>
+    </section>
+  </div>
+
+</main>
+
+<footer data-page-node-id="Q1IK3idgKAnEZyVDd0cyI5">
+  纯 HTML + CSS + 原生 JavaScript 构建 · 立绘画像素材版权归 <b data-page-node-id="AJAmkWTR9TkYfeM7pdUSPA">© HoYoverse（米哈游）</b> 所有，仅作学习交流使用
+</footer>
+
+<script src="characters.js"></script>
+<script src="agent-data.js"></script>
+<script src="agent-meta.js"></script>
+<script src="assistant.js"></script>
+<script src="assistant-llm.js"></script>
+</body>
+</html>
